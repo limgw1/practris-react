@@ -20,8 +20,16 @@ export const auth = getAuth() //Instantiate Firebase's authentication instance
 export const db = getFirestore() //Instantiate Firebase's database instance
 
 
+// Instantiate the additional information needed for a typical practris account
+const templateAccountInformation = {
+  sprintGamesPlayed : 0,
+  accountType : "normal_user",
+  sprintPB : false,
+}
+
+
 // Create user document (basically creating a new account)
-export const createUserDocumentFromAuth = async (userAuth) => {
+export const createUserDocumentFromAuth = async (userAuth, additionalInformation={}) => {
   //If i dont get userAuth. return nothing. this is to protect frontend from firebase changes
   if (!userAuth) return
   const userDocRef = doc(db, 'users', userAuth.uid) //userDocRef is an object that is the reference to a certain point in Firestore
@@ -33,7 +41,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
     const createdAt = new Date()
 
     try{
-      await setDoc(userDocRef, {displayName, email, createdAt})
+      await setDoc(userDocRef, {displayName, email, createdAt, ...templateAccountInformation, ...additionalInformation})
     }catch (error){
       console.log('error creating the user', error.message)
     }

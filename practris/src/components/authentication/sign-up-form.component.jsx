@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import { createAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils'
+import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from '../../utils/firebase/firebase.utils'
 
 //Instead of using 4 different useStates, can use this alternative
 const defaultFormFields = {
@@ -13,6 +13,8 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields)
   const {displayName, email, password, confirmPassword} = formFields
 
+
+  //Handle submitting of the signup form (creating user)
   const handleSubmit = async (event) => {
     event.preventDefault()
     //Check if passwords match
@@ -22,14 +24,21 @@ const SignUpForm = () => {
     }
     //actually try to authenticate
     try{
-      const response = await createAuthUserWithEmailAndPassword(email, password)
-      console.log("Creating user")
-      console.log(response)
+      const {user} = await createAuthUserWithEmailAndPassword(email, password) //Creates the user account in firebase authentication
+      await createUserDocumentFromAuth(user, {displayName}) //Creates the user account in Firestore db (including display name)
+      alert("Confirmed!")
     }catch(error){
-      console.log("User creation encountered an error.", error)
+      //handles User already exists error
+      if(error.code === 'auth/email-already-in-use'){
+        alert("Cannot create user, email already in use")
+      }else{
+        alert("User creation error. Screenshot this error and message Lim Guowei",error)
+      }
     }
   }
 
+
+  //Everytime value on the form changes (triggered by onChange), update the formfields variable
   const handleChange = async(event) => {
     //get name and value from event.target
     const {name,value} = event.target
