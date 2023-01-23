@@ -26,7 +26,8 @@ const SignUpForm = () => {
     try{
       const {user} = await createAuthUserWithEmailAndPassword(email, password) //Creates the user account in firebase authentication
       await createUserDocumentFromAuth(user, {displayName}) //Creates the user account in Firestore db (including display name)
-      alert("Confirmed!")
+      resetFormFields()
+      alert("Account created!")
     }catch(error){
       //handles User already exists error
       if(error.code === 'auth/email-already-in-use'){

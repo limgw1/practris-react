@@ -1,5 +1,5 @@
 import {initializeApp} from 'firebase/app'
-import {getAuth, signInWithPopup, createUserWithEmailAndPassword} from 'firebase/auth'
+import {getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut} from 'firebase/auth'
 import {getFirestore, doc, getDoc, setDoc} from 'firebase/firestore'
 
 // Your web app's Firebase configuration
@@ -27,8 +27,11 @@ const templateAccountInformation = {
   sprintPB : false,
 }
 
+//==========================================================//
+//          CODE BELOW IS INTERFACE LAYER FUNCTIONs         //
+//==========================================================//
 
-// Create user document (basically creating a new account)
+// Create user document to firestore db (basically creating a new account)
 export const createUserDocumentFromAuth = async (userAuth, additionalInformation={}) => {
   //If i dont get userAuth. return nothing. this is to protect frontend from firebase changes
   if (!userAuth) return
@@ -50,8 +53,22 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInformation
   return userDocRef
 }
 
+
+//Create user instance in firebase auth
 export const createAuthUserWithEmailAndPassword = async(email, password) => {
   //If i dont get email or password. return nothing. this is to protect frontend from firebase changes
   if(!email || !password) return
   return await createUserWithEmailAndPassword(auth, email, password)
 }
+
+
+//Sign in user
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+
+  return await signInWithEmailAndPassword(auth, email, password);
+};
+
+
+//Sign out user
+export const signOutUser = async () => await signOut(auth)
