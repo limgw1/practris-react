@@ -6,6 +6,7 @@ import NavBar from './components/navbar/navbar.component'
 import MenuPageComponent from './pages/menu-page.component'
 import LoginPageComponent from './pages/login-page.component'
 import ProfilePageComponent from './pages/profile-page.component'
+import Leaderboard from './pages/leaderboard-page.component'
 
 const App = () => {
   return(
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/game" element={<GamePageComponent/>}/>
         <Route path="/login" element={<LoginPageComponent/>}/>
         <Route path="/profile" element={<ProfilePageComponent/>}/>
+        <Route path="/leaderboards" element={<Leaderboard/>}/>
       </Routes>
     </Fragment>
     
